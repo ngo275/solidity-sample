@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>Ethereum web3 Sample</title>
+    <script src="https://cdn.rawgit.com/ethereum/web3.js/0.19.0/dist/web3.min.js"></script>
+    <script>
+      web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+      const abi = [     {       "constant": true,       "inputs": [         {           "name": "document",           "type": "string"         }       ],       "name": "checkDocument",       "outputs": [         {           "name": "",           "type": "bool"         }       ],       "payable": false,       "stateMutability": "view",       "type": "function"     },     {       "constant": false,       "inputs": [         {           "name": "document",           "type": "string"         }       ],       "name": "notarize",       "outputs": [],       "payable": false,       "stateMutability": "nonpayable",       "type": "function"     },     {       "constant": false,       "inputs": [         {           "name": "proof",           "type": "bytes32"         }       ],       "name": "storeProof",       "outputs": [],       "payable": false,       "stateMutability": "nonpayable",       "type": "function"     },     {       "constant": true,       "inputs": [         {           "name": "proof",           "type": "bytes32"         }       ],       "name": "hasProof",       "outputs": [         {           "name": "",           "type": "bool"         }       ],       "payable": false,       "stateMutability": "view",       "type": "function"     },     {       "constant": true,       "inputs": [         {           "name": "document",           "type": "string"         }       ],       "name": "proofFor",       "outputs": [         {           "name": "",           "type": "bytes32"         }       ],       "payable": false,       "stateMutability": "view",       "type": "function"     }   ];
+      const address = '0x6B3Ac171153526C4B6d61500c21335B893E22548';
+      const contract = web3.eth.contract(abi).at(address);
+      function getInput() {
+        let get = {};
+        let query = window.location.search.substring(1).split("&");
+        for (let i in query) {
+          if (query === "") continue;
+          const param = query[i].split("=");
+          get[decodeURIComponent(param[0])] = decodeURIComponent(param[1] || "");
+        }
+        return get.word;
+      }
+      function checkDocument() {
+        const word = getInput();
+        const res = contract.checkDocument(word);
+        document.write(`The result of ProofOfExistance.checkDocument( ${word} ) is ${res}`);
+      }
+      function notarize() {
+        const word = getInput();
+        contract.notarize(word).call()
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Ethereum Smart Contract Sample</h1>
+    <p>Latest block: <script>document.write(web3.eth.blockNumber + "<br><br>")</script></p>
+    <form onSubmit="return notarize()">
+      Notarize a word
+      <input type=text size=50 name=word><input type="submit">
+    </form>
+    <form>
+      CheckDocument a word
+      <input type=text size=50 name=word><input type="submit">
+    </form>
+    <br>
+    <p><script>checkDocument()</script></p>
+  </body>
+</html>
