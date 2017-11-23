@@ -8,3 +8,4 @@ http://diary.shuichi.tech/entry/2017/11/19/173520
 - `poe.checkDocument('hello')`
 - `poe.notarize('hello')`
 - `poe.checkDocument('hello')`
+- `parity --chain kovan --rpccorsdomain "*"`
